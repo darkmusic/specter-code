@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<project name="Specter Framework" default="build">
+
+	<!-- README:
+You may need to change nunit.inc if you have trouble building because of nunit dependency.
+	-->
+	<include buildfile="nunit.inc" />
+	<loadtasks assembly="C:\Users\johnsot\Documents\Code\boo\bin\Boo.NAnt.Tasks.dll"/>
+	<property name="specter.version" value="0.8.0.0" />
+
+	<property name="debug" value="False" />
+	<property name="optimize" value="False" />
+
+	<property name="install.prefix" value="/usr/local" />
+	<property name="install.destdir" value="/" />
+
+	<property name="ngen.exe" value="${framework::get-framework-directory(framework::get-target-framework())}/ngen.exe" />
+	<property name="skip.ngen" value="True" />
+
+
+	<!-- 	tasks	 -->
+
+	<target name="build" depends="specter-console,pkgconfig" />
+
+	<target name="rebuild" depends="clean build" />
+	
+	<target name="build-debug" depends="set-debug build" />
+	
+	<target name="rebuild-debug" depends="clean build-debug" />
+
+	<target name="Specter.Util" depends="init">
+	    <booc target="library" output="build/Specter.Util.dll"
+			  debug="${debug}">
+			<sources basedir="src">
+				<include name="Specter.Util/**/*.boo" />
+			</sources>
+		</booc>
+	</target>
+
+	<target name="Specter.Framework" depends="Specter.Util">
+		<booc target="library" output="build/Specter.Framework.dll"
+		      debug="${debug}">
+			<references>
+				<include name="build/Specter.Util.dll" />
+				<include name="lib/nunit.framework.dll" />
+			</references>
+			<sources basedir="src/Specter.Framework">
+				<include name="**/*.boo" />
+			</sources>
+		</booc>
+	</target>
+
+	<target name="specter-console" depends="Specter.Framework">
+		<booc target="exe" output="build/specter-console.exe" debug="${debug}">
+			<references>
+				<include name="build/Specter.Framework.dll" />
+			</references>
+			<sources basedir="src/specter-console">
+				<include name="**/*.boo" />
+			</sources>
+		</booc>
+		<if test="${not(platform::is-win32())}">
+			<copy file="extras/specter-console.in" tofile="build/specter-console" inputencoding="ASCII">
+				<filterchain>
+					<replacestring from="@RUNTIME@" to="mono" />
+					<replacestring from="@prefix@" to="${install.prefix}" />
+				</filterchain>
+			</copy>
+			<exec program="chmod" commandline="+x build/specter-console" />
+		</if>
+	</target>
+
+	<target name="Specter.Spec" depends="Specter.Framework">
+		<booc target="library" output="build/Specter.Spec.dll"
+			  debug="${debug}">
+			<references>
+				<include name="build/Specter.Framework.dll" />
+				<include name="build/Specter.Util.dll" />
+				<include name="${nunit.framework.dll}" />
+			</references>
+			<sources basedir="specs">
+				<include name="Specter.Spec/**/*.boo" />
+			</sources>
+		</booc>
+	</target>
+
+	<target name="build-tests" depends="build">
+	
+		<booc target="library" output="tests/SpecterTests.dll"
+		      debug="${debug}">
+			<references>
+				<include name="${nunit.framework.dll}" />
+			</references>
+			<sources basedir="tests/src">
+				<include name="*.boo" />
+			</sources>
+		</booc>
+
+		<!-- build testcases -->
+		<foreach item="File" in="tests/testcases" property="filename">
+			<property name="outfile" value="${path::get-file-name(filename)}" />
+			<if test="${path::get-extension(filename) == '.boo'}">
+				<booc target="library" output="${outfile}-boo.dll"
+				      debug="${debug}">
+					<sources>
+						<include name="${filename}" />
+					</sources>
+				</booc>
+			</if>
+			<if test="${path::get-extension(filename) == '.cs'}">
+				<csc target="library" output="${outfile}-cs.dll"
+				     debug="${debug}">
+					<sources>
+						<include name="${filename}" />
+					</sources>
+				</csc>
+			</if>			
+		</foreach>
+
+	</target>
+
+	<target name="test" depends="Specter.Spec">
+		<nunit2>
+			<formatter type="Plain" />		
+			<test>
+				<assemblies basedir="build">
+					<include name="Specter.Spec.dll" />
+				</assemblies>
+			</test>
+		</nunit2>
+	</target>
+
+	<target name="pkgconfig">
+		<copy file="extras/specter-framework.pc.in" tofile="build/specter-framework.pc" if="${not(platform::is-win32())}" inputencoding="ASCII">
+			<filterchain>
+				<replacestring from="@prefix@" to="${install.prefix}" />
+				<replacestring from="@VERSION@" to="${specter.version}" />
+			</filterchain>
+		</copy>
+	</target>
+
+	<target name="install" depends="build">
+		<call target="install-win32" if="${platform::is-win32()}"/>
+		<call target="install-linux" if="${not(platform::is-win32())}"/>
+	</target>
+
+	<target name="install-linux" depends="build">
+		<mkdir dir="${install.prefix}/lib/specter-framework"/>
+		<copy todir="${install.prefix}/lib/specter-framework">
+			<fileset basedir="build">
+				<include name="*.exe"/>
+				<include name="Specter.Framework.dll"/>
+				<include name="Specter.Util.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${install.prefix}/bin">
+			<fileset basedir="build">
+				<include name="specter-console"/>
+			</fileset>
+		</copy>
+		<exec program="gacutil" useruntimeengine="false" workingdir="build">
+			<arg value="/i" />
+			<arg value="Specter.Framework.dll" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+		<exec program="gacutil" useruntimeengine="false" workingdir="build">
+			<arg value="/i" />
+			<arg value="Specter.Util.dll" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+		<copy file="build/specter-framework.pc" todir="${install.prefix}/lib/pkgconfig/" />
+		<exec program="chmod" commandline="+x ${install.prefix}/bin/specter-console" />
+		<zip zipfile="${install.prefix}/share/man/man1/specter-console.1.gz">
+			<fileset basedir="extras/man">
+				<include name="specter-console.1" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="install-win32" depends="build">
+		<fail unless="${property::exists('mono.prefix')}">
+		Please set the property 'mono.prefix' to point to the prefix of your
+		mono installation (example: c:\dotnet\mono-1.1.8).
+		</fail>
+		<copy todir="${path::combine(mono.prefix, 'lib/specter-framework')}">
+			<fileset basedir="build">
+				<include name="*.exe"/>
+				<include name="Specter.Framework.dll"/>
+				<include name="Specter.Util.dll"/>
+			</fileset>
+		</copy>
+		<exec program="${path::combine(mono.prefix, 'bin/gacutil.bat')}"
+			useruntimeengine="false" workingdir="build">
+			<arg value="/i" />
+			<arg value="Specter.Framework.dll" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+		<exec program="${path::combine(mono.prefix, 'bin/gacutil.bat')}"
+			useruntimeengine="false" workingdir="build">
+			<arg value="/i" />
+			<arg value="Specter.Util.dll" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+	</target>
+	
+	<target name="uninstall">
+		<call target="uninstall-linux" if="${not(platform::is-win32())}"/>
+		<call target="uninstall-win32" if="${platform::is-win32()}"/>
+	</target>
+
+	<target name="uninstall-linux">
+		<exec program="gacutil" useruntimeengine="false" workingdir="build">
+			<arg value="/u" />
+			<arg value="Specter.Framework" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+		<exec program="gacutil" useruntimeengine="false" workingdir="build">
+			<arg value="/u" />
+			<arg value="Specter.Util" />
+			<arg value="/package" />
+			<arg value="specter-framework" />
+		</exec>
+		<delete dir="${install.prefix}/lib/specter-framework" />
+		<delete file="${install.prefix}/lib/pkgconfig/specter-framework.pc" />
+		<delete file="${install.prefix}/bin/specter-console" />
+		<delete file="${install.prefix}/share/man/man1/specter-console.1.gz" />
+	</target>
+
+	<target name="uninstall-win32">
+		<exec program='${ngen.exe}' if="${file::exists(ngen.exe)}" unless="${skip.ngen}">
+			<arg value='/delete' />
+			<arg value='Specter.Framework' />
+			<arg value='Specter.Util' />
+		</exec>
+	</target>
+
+
+	<target name="init">
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+	<target name="set-debug">
+		<property name="debug" value="True" />
+	</target>
+
+	<target name="makedeb" depends="rebuild">
+		<!-- force rebuild to make sure everything's ok and wrappers
+		     are sync'ed with current install.prefix
+		-->
+		<nant buildfile="extras/makedeb.build" />
+	</target>
+
+</project>

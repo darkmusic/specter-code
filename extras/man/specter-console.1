@@ -1,0 +1,48 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH specter-console 1 "4 Jan 2008"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+specter-console \- Specter Framework Console Tool
+.SH SYNOPSIS
+.B specter-console
+.RI [ options ] " specassemblies " ...
+.SH DESCRIPTION
+.B specter-console 
+is a console utility to run specifications made for the Specter Framework.
+.br
+It reports the results of your specifications ran against your implementation code in a user-friendly way.
+.SH OPTIONS
+A summary of options is included below.
+.TP
+.B \-h, \-help
+Displays a help message about how to use the tool.
+.TP
+.B \-q, \-quiet
+Disable output, only return exit code.
+.TP
+.B \-compact
+Do not show context in progress.
+.TP
+.B \-nocolors
+Disable colors (alternatively you can also set SPECTER_NOCOLORS environment var)
+.br
+.SH WEBSITE
+http://specter.sourceforge.net/
+.br
+.SH AUTHOR
+specter-console was written by Cedric Vivier <cedricv@neonux.com>.
+.PP

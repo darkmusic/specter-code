@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<project name="specter.makedeb" default="makedeb" basedir="..">
+
+	<target name="makedeb">
+
+		<echo level="Warning">
+		!!!!!!
+
+		If you are making a deb for public distribution, please make sure you
+		have set 'install.prefix' property to '/usr', 'debug' to false and
+		'optimize' property to true in default.build
+
+		'install.prefix' is currently set to ${install.prefix}
+		'debug' is currently set to ${debug}
+		'optimize' is currently set to ${optimize}
+
+		!!!!!!
+		</echo>
+
+		<!-- DEBIAN package configuration files -->
+		<mkdir dir="build/deb/DEBIAN" />
+		<copy todir="build/deb/DEBIAN" outputencoding="ASCII">
+			<filterchain>
+				<replacestring from="@VERSION@" to="${specter.version}" />
+			</filterchain>
+			<fileset basedir="extras/DEBIAN">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<!-- chmod them just to make sure -->
+		<exec program="chmod" useruntimeengine="false"
+			commandline="755 build/deb/DEBIAN/postinst" />
+		<exec program="chmod" useruntimeengine="false"
+			commandline="755 build/deb/DEBIAN/prerm" />
+
+		<!-- binary files -->
+		<mkdir dir="build/deb${install.prefix}/lib/specter-framework" />
+		<copy todir="build/deb${install.prefix}/lib/specter-framework">
+		    <fileset basedir="build">
+				<include name="*.exe*" />
+				<include name="Specter.Framework.dll" />
+				<include name="Specter.Util.dll" />
+		    </fileset>
+		</copy>
+		<mkdir dir="build/deb${install.prefix}/lib/pkgconfig" />
+		<copy todir="build/deb${install.prefix}/lib/pkgconfig">
+		    <fileset basedir="build">
+				<include name="specter-framework.pc" />
+		    </fileset>
+		</copy>
+		<!-- chmod them just to make sure -->
+		<exec program="chmod" useruntimeengine="false"
+			commandline="755 build/specter-console" />
+		<mkdir dir="build/deb${install.prefix}/bin" />
+		<copy todir="build/deb${install.prefix}/bin">
+		    <fileset basedir="build">
+		        <include name="specter-console" />
+		    </fileset>
+		</copy>
+
+		<!-- documentation -->
+		<mkdir dir="build/deb${install.prefix}/share/doc/specter-framework" />
+		<copy todir="build/deb${install.prefix}/share/doc/specter-framework">
+		    <fileset>
+		        <include name="notice.txt" />
+		        <include name="readme.txt" />
+		        <include name="examples/**" />
+		    </fileset>
+		</copy>
+		<mkdir dir="build/deb${install.prefix}/share/man/man1" />
+		<zip zipfile="build/deb${install.prefix}/share/man/man1/specter-console.1.gz">
+			<fileset basedir="extras/man">
+				<include name="specter-console.1" />
+			</fileset>
+		</zip>
+
+		<!-- call dpkg-deb to actually build the deb package -->
+		<exec program="dpkg-deb" useruntimeengine="false"
+			commandline="-b build/deb build/specter-framework-${specter.version}-1-all.deb" />
+
+	</target>
+</project>

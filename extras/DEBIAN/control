@@ -1,0 +1,16 @@
+Package: specter-framework
+Priority: extra
+Section: devel
+Installed-Size: 500
+Maintainer: Cedric Vivier <cedricv@neonux.com>
+Architecture: all
+Version: @VERSION@-1
+Depends: boo
+Suggests: monodevelop-boo
+Description: Specter Framework
+ Specter is an object-behaviour specification framework for the CLI (Mono/.NET).
+ It enables behaviour driven development (BDD), technologically this is
+ similar to test driven development (TDD), however the shift in nomenclature
+ removes the psychological barrier of writing "tests" for code that does
+ not exist.
+ For more information please visit : http://specter.sourceforge.net/

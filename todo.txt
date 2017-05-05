@@ -1,0 +1,12 @@
+TODOs
+======
+
+- make subject macro support generic types
+- rewrite Macros/ with boo>0.8 "macro:" syntax (ala Boo.Lang.Extensions)
+- remove Specter.Util when boo 0.8.1+ (r.2772)
+- use 0.8.1+ defines as an alternative spec type setter (-d:SPECTER_SPEC_NUNIT...)
+- use 0.8.1+ defines to completely remove NUnit dependency at compilation
+- differentiate output types exe/winexe
+- investigate the 4 failing tests on mono
+- create specter nant task
+

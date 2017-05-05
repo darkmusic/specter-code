@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+
+
+Name: Specter Framework
+Description: An object-behaviour specification framework for the CLI.
+Version: @VERSION@
+Libs: -r:${libdir}/specter-framework/Specter.Framework.dll
+
