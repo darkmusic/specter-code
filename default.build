@@ -5,7 +5,7 @@
 You may need to change nunit.inc if you have trouble building because of nunit dependency.
 	-->
 	<include buildfile="nunit.inc" />
-	<loadtasks assembly="C:\Users\johnsot\Documents\Code\boo\bin\Boo.NAnt.Tasks.dll"/>
+	<loadtasks assembly="C:\Code\boo\build\Boo.NAnt.Tasks.dll"/>
 	<property name="specter.version" value="0.8.0.0" />
 
 	<property name="debug" value="False" />
