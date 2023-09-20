@@ -14,7 +14,6 @@ import System
 import Specter.Framework
 import Specter.Spec
 import NUnit.Framework
-import Boo.Lang.Runtime
 
 [TestFixture]
 class CallableMustWithNonThrowingRunner:

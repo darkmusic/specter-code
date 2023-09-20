@@ -13,7 +13,6 @@ namespace Specter.Spec.ByteMustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 			
 context "ByteMust with value 0 and normal asserter":
 	must as ByteMust

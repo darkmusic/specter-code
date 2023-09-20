@@ -13,7 +13,6 @@ namespace Specter.Spec.Int64MustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 			
 context "Int64Must with value 0 and normal asserter":
 	must as Int64Must

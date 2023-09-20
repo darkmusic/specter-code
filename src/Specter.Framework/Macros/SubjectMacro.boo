@@ -50,7 +50,7 @@ class SubjectMacro(AbstractAstMacro):
 			assignment  = [|
 				block:
 					$subjectHolder = System.Activator.CreateInstance(System.Type.GetType($_typeName)) as duck
-			|].Block
+			|].Body
 		else:
 			temp = ReferenceExpression("__specter_ctorArgsArray")
 			assignment = Block()
@@ -70,7 +70,7 @@ class SubjectMacro(AbstractAstMacro):
 					raise SubjectTypeNotFoundException($_typeName, e)
 				except e as System.MissingMethodException:
 					raise SubjectConstructorNotFoundException($_typeName, $temp, e)
-		|].Block
+		|].Body
 
 		if _description is not null:
 			block.Annotate(Annotations.SubjectDescription, StringLiteralExpression(_description))

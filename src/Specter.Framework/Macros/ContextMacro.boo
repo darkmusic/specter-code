@@ -55,7 +55,7 @@ class ContextMacro(AbstractAstMacro):
 		classDef.Attributes.Add(attr)
 
 		for add as callable in (AddFields, AddSetupMethod, AddTearDownMethod, AddSpecifyMethods):
-			add(classDef, macro.Block)
+			add(classDef, macro.Body)
 
 		parent as Node = macro
 		while not parent isa Module:
@@ -69,7 +69,7 @@ class ContextMacro(AbstractAstMacro):
 						runner = Specter.Framework.Runner((System.Reflection.Assembly.GetExecutingAssembly(),))
 						runner.View = Specter.Framework.ConsoleRunnerView()
 						return runner.Run(true)
-				|].Block
+				|].Body
 			method.Attributes.Add(Attribute(typeof(System.STAThreadAttribute).FullName))
 			(parent as Module).Members.Add(method)
 			ContextMacro.EntryPointSet = true

@@ -3,6 +3,7 @@ namespace Examples
 import System
 import Specter.Framework
 
+import System.Runtime.CompilerServices;
 
 [Extension]
 def Must(x as Foo, message as string):

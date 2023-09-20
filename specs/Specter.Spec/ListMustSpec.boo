@@ -13,7 +13,6 @@ namespace Specter.Spec.ListMustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 
 context "ListMust with empty list":
 	

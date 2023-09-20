@@ -13,7 +13,6 @@ namespace Specter.Spec.EnumerableMustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 
 context "EnumerableMust with empty list":
 	

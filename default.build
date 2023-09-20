@@ -76,12 +76,14 @@ You may need to change nunit.inc if you have trouble building because of nunit d
 			<references>
 				<include name="build/Specter.Framework.dll" />
 				<include name="build/Specter.Util.dll" />
-				<include name="${nunit.framework.dll}" />
+				<include name="lib/nunit.framework.dll" />
 			</references>
 			<sources basedir="specs">
 				<include name="Specter.Spec/**/*.boo" />
 			</sources>
 		</booc>
+    <copy file="c:/code/boo/build/Boo.Lang.dll" tofile="build/Boo.Lang.dll" />
+    <copy file="lib/nunit.framework.dll" tofile="build/nunit.framework.dll" />
 	</target>
 
 	<target name="build-tests" depends="build">

@@ -13,7 +13,6 @@ namespace Specter.Spec.UInt16MustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 			
 context "UInt16Must with value 0 and normal asserter":
 	must as UInt16Must

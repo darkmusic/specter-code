@@ -11,6 +11,7 @@
 namespace Specter.Framework
 
 import System
+import System.Runtime.CompilerServices;
 
 [Extension]
 static def Must(x as ICallable, asserter as IAsserter):

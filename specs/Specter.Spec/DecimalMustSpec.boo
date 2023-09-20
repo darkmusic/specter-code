@@ -13,7 +13,6 @@ namespace Specter.Spec.DecimalMustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 			
 context "DecimalMust with value 0 and normal asserter":
 	must as DecimalMust

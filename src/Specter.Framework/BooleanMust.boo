@@ -12,6 +12,7 @@ namespace Specter.Framework
 
 import System
 import Specter.Util
+import System.Runtime.CompilerServices;
 
 [Extension]
 def Must(b as bool, asserter as IAsserter):

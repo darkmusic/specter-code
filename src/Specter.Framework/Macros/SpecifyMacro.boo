@@ -28,7 +28,7 @@ class SpecifyMacro(AbstractAstMacro):
 			AsserterFactory.AsserterType = AsserterType.Specter
 
 		name = SafeIdentifierName(macro.Arguments[0])
-		block = macro.Block.CloneNode()
+		block = macro.Body.CloneNode()
 		block.Annotate(Annotations.Specify, name)
 		if not (macro.Arguments[0] isa StringLiteralExpression):
 			block.Annotate(Annotations.SpecifyDescription, StringLiteralExpression(macro.Arguments[0].ToCodeString()))

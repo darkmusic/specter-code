@@ -18,6 +18,6 @@ import Boo.Lang.Compiler.Ast
 class TeardownMacro(AbstractAstMacro):
 
 	override def Expand(macro as MacroStatement):
-		block = macro.Block.CloneNode()
+		block = macro.Body.CloneNode()
 		block.Annotate(Annotations.TearDown)
 		return block

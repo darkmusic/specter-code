@@ -196,7 +196,7 @@ class Runner(IRunner):
 					for method in type.GetMethods():
 						if 1 == method.GetCustomAttributes(typeof(SpecificationDescriptionAttribute), false).Length:
 							sdesc = method.GetCustomAttributes(typeof(SpecificationDescriptionAttribute), false)[0]
-							ssubjects = method.GetCustomAttributes(typeof(SubjectDescriptionAttribute), false)
+							// ssubjects = method.GetCustomAttributes(typeof(SubjectDescriptionAttribute), false)
 							//specs.Add(Specification(Context: c, Description: sdesc, Subjects: ssubjects, MethodInfo: method))
 							specs.Add(Specification(Context: c, Description: sdesc, MethodInfo: method))
 						elif 1 == method.GetCustomAttributes(typeof(SetUpAttribute), false).Length:

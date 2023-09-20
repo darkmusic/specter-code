@@ -13,6 +13,7 @@ namespace Specter.Framework
 import System
 import System.Collections
 import Specter.Util
+import System.Runtime.CompilerServices;
 
 [Extension]
 def Must(x as IEnumerable, asserter as IAsserter):

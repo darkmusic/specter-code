@@ -13,7 +13,6 @@ namespace Specter.Spec.DoubleMustContexts
 import System
 import Specter.Framework
 import Specter.Spec
-import NUnit.Framework
 
 context "DoubleMust with 0.0 value":
 	

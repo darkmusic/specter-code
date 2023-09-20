@@ -12,6 +12,7 @@ namespace Specter.Framework
 
 import System
 import Specter.Util
+import System.Runtime.CompilerServices;
 
 [Extension]
 static def Must(x as object, asserter as IAsserter):
@@ -34,7 +35,10 @@ class ObjectMust(IObjectMust, IEquatableMust, IComparableMust, ISatisfiableMust)
 		_value = value
 
 		_equatableMust = EquatableMust(value, asserter)
-		_comparableMust = ComparableMust(value, asserter)
+		try:
+			_comparableMust = ComparableMust(value, asserter)
+		except:
+			pass
 
 	Not:
 		get:

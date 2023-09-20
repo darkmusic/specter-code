@@ -11,6 +11,7 @@
 namespace Specter.Framework
 
 import System
+import System.Runtime.CompilerServices;
 
 [Extension]
 def Must(x as IComparable, asserter as IAsserter):
